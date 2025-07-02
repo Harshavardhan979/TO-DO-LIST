@@ -1,41 +1,61 @@
 function addTask() {
-  let input = document.getElementById("taskInput");
-  let taskText = input.value.trim();
+  const input = document.getElementById("taskInput");
+  const timeInput = document.getElementById("alarmTime");
+
+  const taskText = input.value.trim();
+  const alarmTime = timeInput.value;
 
   if (taskText === "") {
     alert("Please enter a task!");
     return;
   }
 
-  const time = getCurrentTime();
+  const now = new Date();
+  const [hour, minute] = alarmTime.split(":");
 
-  let li = document.createElement("li");
+  const alarmDate = new Date();
+  alarmDate.setHours(hour, minute, 0, 0); // set seconds & ms to 0
 
+  // If time has already passed today, set for next day
+  if (alarmDate < now) {
+    alarmDate.setDate(alarmDate.getDate() + 1);
+  }
+
+  const timeDiff = alarmTime ? alarmDate.getTime() - now.getTime() : null;
+
+  if (timeDiff && timeDiff > 0) {
+    setTimeout(() => {
+      alert(`⏰ Task Time: "${taskText}"`);
+    }, timeDiff);
+  }
+
+  const formattedTime = alarmTime ? formatTime(alarmTime) : "No Alarm";
+
+  const li = document.createElement("li");
   li.innerHTML = `
     <div class="task-left">
       <input type="checkbox" onchange="toggleDone(this)">
       <div>
         <span class="task-text">${taskText}</span><br>
-        <span class="task-time">(Added at ${time})</span>
+        <span class="task-time">Alarm set for: ${formattedTime}</span>
       </div>
     </div>
     <button onclick="deleteTask(this)">❌</button>
   `;
 
   document.getElementById("taskList").appendChild(li);
+
   input.value = "";
+  timeInput.value = "";
 }
 
-function getCurrentTime() {
-  const now = new Date();
-  let hours = now.getHours();
-  let minutes = now.getMinutes();
-  let ampm = hours >= 12 ? "PM" : "AM";
-
-  hours = hours % 12 || 12;
-  minutes = minutes < 10 ? "0" + minutes : minutes;
-
-  return `${hours}:${minutes} ${ampm}`;
+function formatTime(timeStr) {
+  const [hourStr, minuteStr] = timeStr.split(":");
+  let hour = parseInt(hourStr);
+  const minute = minuteStr;
+  const ampm = hour >= 12 ? "PM" : "AM";
+  hour = hour % 12 || 12;
+  return `${hour}:${minute} ${ampm}`;
 }
 
 function deleteTask(button) {
@@ -43,6 +63,6 @@ function deleteTask(button) {
 }
 
 function toggleDone(checkbox) {
-  let li = checkbox.closest("li");
+  const li = checkbox.closest("li");
   li.classList.toggle("done");
 }
