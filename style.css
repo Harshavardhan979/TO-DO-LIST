@@ -13,7 +13,7 @@ body {
   padding: 30px;
   border-radius: 10px;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-  width: 350px;
+  width: 380px;
 }
 
 h1 {
@@ -23,9 +23,9 @@ h1 {
 
 .input-section {
   display: flex;
+  flex-direction: column;
   gap: 10px;
   margin-top: 20px;
-  flex-direction: column;
 }
 
 input[type="text"],
@@ -57,18 +57,19 @@ ul {
 
 li {
   display: flex;
-  align-items: center;
   justify-content: space-between;
+  align-items: flex-start;
   background-color: #e2e8f0;
   padding: 10px;
   margin-bottom: 10px;
   border-radius: 5px;
+  flex-wrap: wrap;
 }
 
 .task-left {
   display: flex;
-  align-items: flex-start;
   gap: 10px;
+  flex-grow: 1;
 }
 
 .task-text {
@@ -84,4 +85,10 @@ li {
   text-decoration: line-through;
   color: gray;
   opacity: 0.7;
+}
+
+.task-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
 }
